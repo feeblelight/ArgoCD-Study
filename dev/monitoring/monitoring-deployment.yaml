@@ -18,6 +18,12 @@ spec:
         alertmanager:
           persistence:
             enabled: false
+        pushgateway:
+          persistentVolume:
+            enabled: false
+        nodeExporter:
+          persistentVolume:
+            enabled: false
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
