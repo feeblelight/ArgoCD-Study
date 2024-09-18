@@ -8,7 +8,7 @@ spec:
   source:
     chart: kube-prometheus-stack
     repoURL: https://prometheus-community.github.io/helm-charts
-    targetRevision: 62.7.0
+    targetRevision: 55.5.0
     helm:
       releaseName: monitoring
       values: |
@@ -21,6 +21,9 @@ spec:
           alertmanager:
             persistentVolume:
               enabled: false
+      parameters:
+        - name: crds.create
+          value: "true"
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
@@ -30,3 +33,4 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      - ServerSideApply=true
