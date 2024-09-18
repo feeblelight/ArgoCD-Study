@@ -13,7 +13,7 @@ spec:
       releaseName: monitoring
       values: |
         grafana:
-          adminPassword: "12345"
+          adminPassword: null
         prometheus:
           server:
             persistentVolume:
