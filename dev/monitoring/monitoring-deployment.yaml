@@ -13,18 +13,12 @@ spec:
       releaseName: monitoring
       values: |
         grafana:
-          adminPassword: 12345
+          adminPassword: "12345"
         prometheus:
           server:
             persistentVolume:
               enabled: false
           alertmanager:
-            persistentVolume:
-              enabled: false
-          pushgateway:
-            persistentVolume:
-              enabled: false
-          nodeExporter:
             persistentVolume:
               enabled: false
   destination:
