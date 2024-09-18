@@ -1,71 +1,32 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: monitoring
----
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: prometheus
+  name: kube-prometheus-stack
   namespace: argocd
 spec:
   project: default
   source:
+    chart: kube-prometheus-stack
     repoURL: https://prometheus-community.github.io/helm-charts
-    chart: prometheus
-    targetRevision: 14.11.0
+    targetRevision: <версия_чарта>
     helm:
-      releaseName: prometheus
+      releaseName: monitoring
       values: |
-        server:
-          persistentVolume:
-            enabled: false
-        alertmanager:
-          persistentVolume:
-            enabled: false
-        pushgateway:
-          persistentVolume:
-            enabled: false
-        nodeExporter:
-          persistentVolume:
-            enabled: false
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: monitoring
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: grafana
-  namespace: argocd
-spec:
-  project: default
-  source:
-    repoURL: https://charts.helm.sh/stable
-    chart: grafana
-    targetRevision: 8.5.1
-    helm:
-      releaseName: grafana
-      values: |
-        persistence:
-          enabled: false
-        adminUser: admin
-        adminPassword: adminPassword123
-        datasources:
-          datasources.yaml:
-            apiVersion: 1
-            datasources:
-              - name: Prometheus
-                type: prometheus
-                url: http://prometheus-server.monitoring.svc.cluster.local
-                access: proxy
-                isDefault: true
+        grafana:
+          adminPassword: 12345
+        prometheus:
+          server:
+            persistentVolume:
+              enabled: false
+          alertmanager:
+            persistentVolume:
+              enabled: false
+          pushgateway:
+            persistentVolume:
+              enabled: false
+          nodeExporter:
+            persistentVolume:
+              enabled: false
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
