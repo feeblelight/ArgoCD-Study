@@ -1,3 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: monitoring
+---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -34,7 +39,39 @@ spec:
     syncOptions:
       - CreateNamespace=true
 ---
-apiVersion: v1
-kind: Namespace
+apiVersion: argoproj.io/v1alpha1
+kind: Application
 metadata:
-  name: monitoring
+  name: grafana
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://charts.helm.sh/stable
+    chart: grafana
+    targetRevision: 6.17.4
+    helm:
+      releaseName: grafana
+      values: |
+        persistence:
+          enabled: false
+        adminUser: admin
+        adminPassword: adminPassword123
+        datasources:
+          datasources.yaml:
+            apiVersion: 1
+            datasources:
+              - name: Prometheus
+                type: prometheus
+                url: http://prometheus-server.monitoring.svc.cluster.local
+                access: proxy
+                isDefault: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
