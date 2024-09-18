@@ -13,10 +13,10 @@ spec:
       releaseName: prometheus
       values: |
         server:
-          persistence:
+          persistentVolume:
             enabled: false
         alertmanager:
-          persistence:
+          persistentVolume:
             enabled: false
         pushgateway:
           persistentVolume:
